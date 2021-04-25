@@ -12,6 +12,8 @@ target 'pokemon_map' do
     :hermes_enabled => false
   )
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'pokemon_mapTests' do
     inherit! :complete
     # Pods for testing
