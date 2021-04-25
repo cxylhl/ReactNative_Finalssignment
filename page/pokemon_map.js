@@ -10,7 +10,14 @@ export default class App extends Component {
   
     this.state = {
       pokemonDetails_id:0,
-      mapOf:'pokemonMap'
+      mapOf:'pokemonMap',
+      visible:false,
+      pokemon_HP:0,
+      pokemon_Attack:0,
+      pokemon_Defense:0,
+      pokemon_SpAttack:0,
+      pokemon_SpDefense:0,
+      pokemon_Speed:0
     }
     this.pic = {
       'uri':[
@@ -30,8 +37,18 @@ export default class App extends Component {
                 <Text style={styles.mapText}>ID:{this._tidyId(pokemonMap.id)}</Text>
                 <Text style={styles.mapText}>名称:{pokemonMap.name.chinese}</Text>
                 <Text style={styles.mapText}>属性:{this._type(pokemonMap.type)}</Text>
-                <TouchableHighlight style={styles.btn}>
-                  <Text style={styles.btnText}>详情</Text>
+                <TouchableHighlight onPress={()=>
+                    this.setState({
+                      visible:!this.state.visible,
+                      pokemon_HP:pokemonMap.base.HP,
+                      pokemon_Attack:pokemonMap.base.Attack,
+                      pokemon_Defense:pokemonMap.base.Defense,
+                      pokemon_SpAttack:pokemonMap.base['Sp. Attack'],
+                      pokemon_SpDefense:pokemonMap.base['Sp. Defense'],
+                      pokemon_Speed:pokemonMap.base.Speed
+                    })
+                  } style={styles.btn}>
+                  <Text style={styles.btnText}>查看种族值</Text>
                 </TouchableHighlight>
               </View>
               <View style={styles.mapPic}>
@@ -50,7 +67,7 @@ export default class App extends Component {
           return <View key={index} style={styles.map}>
             <View style={styles.mapTextView}>
               <Text style={styles.mapText}>ID:{this._tidyId(prop.id)}</Text>
-              <Text style={styles.mapText}>道具名称:{prop.name.chinese}</Text>
+              <Text style={styles.mapText}>{prop.name.chinese}</Text>
             </View>
             <View style={styles.mapPic}>
               <ImageBackground style={styles.pokemonBackground} source={require('../pokemon.json-master/images/background.jpg')}>
@@ -120,6 +137,20 @@ export default class App extends Component {
         <View style={styles.SView}>
           {this._mapSwitch(this.state.mapOf)}
         </View>
+        {/* 查看种族值蒙版 */}
+        <Modal visible={this.state.visible} transparent={true} animationType='fade'>
+          <View style={{flex:1,justifyContent:'center'}}>
+            <View style={{width:'90%',height:'90%',backgroundColor:'#ff7f50',alignSelf:'center',borderRadius:20}}>
+              <Text>{this.state.pokemon_HP}</Text>
+              <Text>{this.state.pokemon_Attack}</Text>
+              <Text>{this.state.pokemon_Defense}</Text>
+              <Text>{this.state.pokemon_SpAttack}</Text>
+              <Text>{this.state.pokemon_SpDefense}</Text>
+              <Text>{this.state.pokemon_Speed}</Text>
+              <Button onPress={()=>this.setState({visible:!this.state.visible})} title='关闭'/>
+            </View>
+          </View>
+        </Modal>
       </View>
     )
   }
